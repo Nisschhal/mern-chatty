@@ -2,8 +2,14 @@ import jwt from "jsonwebtoken"
 
 export const generateToken = async (userId, res) => {
   try {
+    const { JWT_SECRET } = process.env
+
+    if (!JWT_SECRET) {
+      throw new Error("JWT_SECRET is not defined in environment variables")
+    }
+
     // Function to generate a token (e.g., JWT) for the user
-    const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: userId }, JWT_SECRET, {
       expiresIn: "1d", // Token validity duration
     })
     // place the token in an HTTP-only cookie
