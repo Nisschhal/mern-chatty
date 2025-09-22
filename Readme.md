@@ -140,6 +140,8 @@ So what we will do is merge them into one project and deploy it to sevalla.
     },
     ```
 
+    ### This should now work and deploy the project to sevalla, once done click the visit App.
+
     **_Note: during deployment, make sure to set the environment variable NODE_ENV to production and add the build script to package.json_**
 
 **_Note: this code is only for production to server both client and server APIs because for development we can spin different servers for frontend and backend_**
