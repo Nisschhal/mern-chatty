@@ -122,4 +122,24 @@ So what we will do is merge them into one project and deploy it to sevalla.
 
     **_Because express version > 5.x.x does not support wildcard routes_**
 
+    - This is now let you access client routes: `/`, `/login`, `/signup`, `/logout` and also server routes: `/api/auth/login`, `/api/auth/signup`, `/api/auth/logout` in same domain
+
+3.  Now create an account in sevalla with github, connect the repo and deploy the project there [https://app.sevalla.com/](https://app.sevalla.com/)
+
+    - it is free
+    - supports socket.io
+    - it might take some time to deploy the project
+
+      Caution: there might be error in deployment `error during build: Could not load /vite.svg (imported by src/App.jsx): crypto.hash is not a function` if you see this than you need to add
+      add the following in root/package.json because of
+      `You are using Node.js 18.20.5. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.`
+
+    ```JS
+      "engines": {
+      "node": ">=20.0.0"
+    },
+    ```
+
+    **_Note: during deployment, make sure to set the environment variable NODE_ENV to production and add the build script to package.json_**
+
 **_Note: this code is only for production to server both client and server APIs because for development we can spin different servers for frontend and backend_**
