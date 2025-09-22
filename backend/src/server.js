@@ -5,9 +5,14 @@ import { existsSync } from "fs"
 
 import authRoutes from "./routes/auth.route.js"
 import messageRoutes from "./routes/message.route.js"
+import { connectDB } from "./lib/db.js"
 
 dotenv.config()
 const app = express()
+
+// Middlewares
+// Parse JSON bodies (as sent by API clients)
+app.use(express.json())
 
 const PORT = process.env.PORT || 3000
 console.log("PORT:", PORT)
@@ -44,4 +49,5 @@ if (process.env.NODE_ENV === "production") {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
+  connectDB()
 })

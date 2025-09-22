@@ -1,0 +1,21 @@
+import jwt from "jsonwebtoken"
+
+export const generateToken = async (userId, res) => {
+  try {
+    // Function to generate a token (e.g., JWT) for the user
+    const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+      expiresIn: "1d", // Token validity duration
+    })
+    // place the token in an HTTP-only cookie
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      sameSite: "Strict", // Adjust based on your requirements
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 day
+    })
+    return token
+  } catch (error) {
+    console.error("Error generating token:", error)
+    throw new Error("Token generation failed")
+  }
+}

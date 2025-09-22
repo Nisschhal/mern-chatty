@@ -59,6 +59,22 @@ Create a format for a chat app using MERN stack
        - auth.route.js - for authentication routes: login, signup, logout
        - message.route.js - for message routes: get messages, send message
 
+5. Connect to MongoDB
+
+   - `npm install mongoose` which we already did
+   - Create an accoune in [https://cloud.mongodb.com/](https://cloud.mongodb.com/) for online mongdb database
+   - Create a .env file and add the following:
+
+     - `MONGODB_URL=mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/<database-name>?retryWrites=true&w=majority`
+     - which you will get after creating the new project in mongodb atlas
+
+   - creating `/backend/src/lib/db.js` file to connect to the database
+   - add the connection to the server.js file
+
+#### Implementation Detail on server.js file
+
+1. Add `app.use(express.json())` middleware to parse JSON requests
+
 ---
 
 ## Deployment Setup
