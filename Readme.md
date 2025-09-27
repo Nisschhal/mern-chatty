@@ -1,4 +1,4 @@
-b# MERN CHATTY
+# MERN CHATTY
 
 Create a format for a chat app using MERN stack
 
@@ -27,6 +27,7 @@ Create a format for a chat app using MERN stack
 - dotenv for environment variables
   - for latest version of node:>20.6.0, dotenv package may not required, as it is included with node
 - cookie-parser for cookies
+- nodemailer for sending emails
 
 ### Backend Setup
 
@@ -161,3 +162,15 @@ So what we will do is merge them into one project and deploy it to sevalla.
     **_Note: during deployment, make sure to set the environment variable NODE_ENV to production and add the build script to package.json_**
 
 **_Note: this code is only for production to server both client and server APIs because for development we can spin different servers for frontend and backend_**
+
+## APIs Implementation Details
+
+### Auth APIs
+
+- `/api/auth/signup` - Register a new user
+  - Username, Email and password are required
+  - Alert Emails will be sent for new user
+- `/api/auth/login` - Login a user
+- `/api/auth/logout` - Logout a user
+
+### Message APIs
