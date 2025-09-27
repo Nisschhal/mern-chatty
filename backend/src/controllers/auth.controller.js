@@ -73,12 +73,39 @@ export const signupController = async (req, res) => {
   }
 }
 
-export const loginController = (req, res) => {
-  // Handle user login logic here
-  res.send("Login route")
+export const loginController = async (req, res) => {
+  const { email, password } = req.body
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ error: "All fields are required" })
+    }
+
+    // Check if user exists in the database
+    const user = await User.findOne({ email })
+    if (!user) {
+      return res.status(400).json({ error: "Invalid credentials" })
+    }
+
+    // Compare the provided password with the hashed password in the database
+    const isMatch = bcrypt.compare(password, user.password)
+
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid credentials" })
+    }
+
+    // Generate a token for the user
+    generateToken(user._id, res)
+    const { password: pwd, ...userWithoutPassword } = user.toObject()
+    res.json({ message: "Login successful", user: userWithoutPassword })
+  } catch (error) {
+    console.error("Error logging in user:", error)
+    res
+      .status(500)
+      .json({ error: "Internal server error, Could not log in user" })
+  }
 }
 
 export const logoutController = (req, res) => {
-  // Handle user logout logic here
-  res.send("Logout route")
+  res.clearCookie("jwt", { httpOnly: true, secure: true, sameSite: "None" })
+  res.json({ message: "Logged out successfully" })
 }

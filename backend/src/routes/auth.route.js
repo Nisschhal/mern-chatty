@@ -1,5 +1,9 @@
 import express from "express"
-import { signupController } from "../controllers/auth.controller.js"
+import {
+  loginController,
+  logoutController,
+  signupController,
+} from "../controllers/auth.controller.js"
 
 const router = express.Router()
 
@@ -7,14 +11,8 @@ const router = express.Router()
 router.post("/signup", signupController)
 
 // Define your auth routes here
-router.post("/login", (req, res) => {
-  // Handle login
-  res.send("Login route")
-})
+router.post("/login", loginController)
 
-router.post("/logout", (req, res) => {
-  // Handle logout
-  res.send("Logout route")
-})
+router.post("/logout", logoutController)
 
 export default router
