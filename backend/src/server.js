@@ -1,18 +1,21 @@
 import express from "express"
 import dotenv from "dotenv"
 import path from "path"
-import { existsSync } from "fs"
+import cookieParser from "cookie-parser"
 
 import authRoutes from "./routes/auth.route.js"
 import messageRoutes from "./routes/message.route.js"
 import { connectDB } from "./lib/db.js"
 
 dotenv.config()
+
 const app = express()
 
 // Middlewares
-// Parse JSON bodies (as sent by API clients)
+// Parse JSON bodies  (as sent by API clients)
 app.use(express.json())
+// Parse Cookie for JWT token
+app.use(cookieParser())
 
 const PORT = process.env.PORT || 3000
 console.log("PORT:", PORT)
