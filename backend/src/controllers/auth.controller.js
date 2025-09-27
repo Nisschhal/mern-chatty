@@ -1,11 +1,14 @@
 import bcrypt from "bcryptjs"
 import User from "../models/user.model.js"
+
 import { generateToken } from "../lib/utils.js"
+import { sendEmail } from "../lib/email.js"
+import ENV from "../lib/env.js"
 
 export const signupController = async (req, res) => {
+  const { username, email, password } = req.body
+  const { CLIENT_URL } = ENV
   try {
-    const { username, email, password } = req.body
-
     if (!username || !email || !password) {
       return res.status(400).json({ error: "All fields are required" })
     }
@@ -38,14 +41,18 @@ export const signupController = async (req, res) => {
       email,
       password: hashedPassword,
     })
+
     console.log("Creating new user:", newUser)
 
     if (!newUser) {
       return res.status(500).json({ error: "Could not create user" })
     }
+
     // Save the new user to the database
-    generateToken(newUser._id, res)
-    await newUser.save()
+    const savedUser = await newUser.save()
+
+    // Generate a token for the new user
+    generateToken(savedUser._id, res)
     console.log("User created successfully:", newUser)
 
     res
@@ -53,6 +60,11 @@ export const signupController = async (req, res) => {
       .json({ message: "User created successfully", user: newUser })
 
     // TODO: send verification || welcome email
+    try {
+      await sendEmail(email, username, process.env.CLIENT_URL)
+    } catch (error) {
+      console.error("Error sending welcome email:", error)
+    }
   } catch (error) {
     console.error("Error creating user:", error)
     res
