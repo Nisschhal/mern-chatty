@@ -1,4 +1,5 @@
-import { createWelcomeEmailTemplate } from "../email/email-template"
+import { createWelcomeEmailTemplate } from "../email/email-template.js"
+import nodemailer from "nodemailer"
 export const sendEmail = async (email, name, clientUrl) => {
   try {
     const { SENDER_EMAIL, SENDER_PASSWORD } = process.env
