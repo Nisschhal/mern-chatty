@@ -16,7 +16,7 @@ export const generateToken = async (userId, res) => {
     // place the token in an HTTP-only cookie
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: NODE_ENV === "production", // Use secure cookies in production
+      secure: false, // Use secure cookies in production
       sameSite: "Strict", // Adjust based on your requirements
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 day
     })

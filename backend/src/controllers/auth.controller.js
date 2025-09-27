@@ -4,6 +4,7 @@ import User from "../models/user.model.js"
 import { generateToken } from "../lib/utils.js"
 import { sendEmail } from "../lib/email.js"
 import ENV from "../lib/env.js"
+import cloudinary from "../lib/cloudinary.js"
 
 export const signupController = async (req, res) => {
   const { username, email, password } = req.body
@@ -105,7 +106,33 @@ export const loginController = async (req, res) => {
   }
 }
 
-export const logoutController = (req, res) => {
-  res.clearCookie("jwt", { httpOnly: true, secure: true, sameSite: "None" })
-  res.json({ message: "Logged out successfully" })
+export const logoutController = (_, res) => {
+  res.cookie("jwt", "", { maxAge: 0 })
+  res.status(200).json({ message: "Logged out successfully" })
+}
+
+// Profile Update
+export const updateProfileController = async (req, res) => {
+  try {
+    const { profilePic } = req.body
+    if (!profilePic) {
+      return res.status(400).json({ error: "Profile picture is required" })
+    }
+
+    const userId = req.user._id
+    const uploadResponse = await cloudinary.uploader.upload(profilePic)
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        profilePic: uploadResponse.secure_url,
+      },
+      { new: true }
+    )
+    res.status(200).json({ message: "User Profile Updated!", updatedUser })
+  } catch (error) {
+    console.error("Error updating profile:", error)
+    res
+      .status(500)
+      .json({ error: "Internal server error, Could not update profile" })
+  }
 }
