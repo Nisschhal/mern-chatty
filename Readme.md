@@ -28,6 +28,7 @@ Create a format for a chat app using MERN stack
   - for latest version of node:>20.6.0, dotenv package may not required, as it is included with node
 - cookie-parser for cookies
 - nodemailer for sending emails
+- cloudinary for image uploading
 
 ### Backend Setup
 
@@ -172,5 +173,12 @@ So what we will do is merge them into one project and deploy it to sevalla.
   - Alert Emails will be sent for new user
 - `/api/auth/login` - Login a user
 - `/api/auth/logout` - Logout a user
+
+### Profile APIs
+
+- `api/updateProfile` - Update user profile
+  - sign up into cloudinary and update profile image
+  - install cloudinary `npm install cloudinary` and initialize the cloudinary in /libs/cloudinary.js using its keys
+  - Follow the documentation [https://cloudinary.com/documentation/node_integration](https://cloudinary.com/documentation/node_integration)
 
 ### Message APIs
