@@ -29,6 +29,7 @@ Create a format for a chat app using MERN stack
 - cookie-parser for cookies
 - nodemailer for sending emails
 - cloudinary for image uploading
+- arcjet for rate limiting
 
 ### Backend Setup
 
@@ -182,3 +183,96 @@ So what we will do is merge them into one project and deploy it to sevalla.
   - Follow the documentation [https://cloudinary.com/documentation/node_integration](https://cloudinary.com/documentation/node_integration)
 
 ### Message APIs
+
+## Rate Limit with Arcjet
+
+- Rate limiting is a way to control how often someone can do something on a website or app.
+- Like how many time a user can refresh the page, make a request to an api, or try to login.
+- Example: only 100 requests per user every 2 minute.
+  **_In simple term, arcjet is a rate limiter_**
+  - Archjet prevent abuse (ex. someone making 1000 login attempts in a minute)
+  - Protect against DDoS attacks || overwhelming the server with requests
+- Status Code: 429
+
+### Arcjet Implementation
+
+- Create an account in [https://arcjet.com/](https://arcjet.com/)
+- Copy the API key and add it to the .env file
+  - or follow [https://app.arcjet.com/sites/site_01k6apm7tbentttq3sk1mak9rf/sdk-configuration?first-install](https://app.arcjet.com/sites/site_01k6apm7tbentttq3sk1mak9rf/sdk-configuration?first-install)
+- install dependencies `npm i @arcjet/node @arcjet/inspect`
+- create /libs/arcjet.js file and add the following
+  ```JS
+  import arcjet, { shield, detectBot, slidingWindow } from "@arcjet/node"
+  import { ENV } from "../lib/env.js"
+  const aj = arcjet({
+  // Get your site key from https://app.arcjet.com and set it as an environment
+  // variable rather than hard coding.
+  key: ENV.ARCJET_API_KEY,
+  rules: [
+  // Shield protects your app from common attacks e.g. SQL injection
+  shield({ mode: "LIVE" }),
+  // Create a bot detection rule
+  detectBot({
+  mode: "LIVE", // Blocks requests. Use "DRY_RUN" to log only
+  // Block all bots except the following
+  allow: [
+  "CATEGORY:SEARCH_ENGINE", // Google, Bing, etc
+  // Uncomment to allow these other common bot categories
+  // See the full list at https://arcjet.com/bot-list
+  //"CATEGORY:MONITOR", // Uptime monitoring services
+  //"CATEGORY:PREVIEW", // Link previews e.g. Slack, Discord
+  ],
+  }),
+  // Create a token bucket rate limit. Other algorithms are supported.
+  slidingWindow({
+  mode: "LIVE", // will block requests. Use "DRY_RUN" to log only
+  // Tracked by IP address by default, but this can be customized
+  // See https://docs.arcjet.com/fingerprints
+  //characteristics: ["ip.src"],
+  interval: 60, // 60 second sliding window
+  max: 5, // allow a maximum of 100 requests
+  }),
+  ],
+  })
+  ```
+- now create arcjet.middleware.js file in /middleware and add the following
+
+  ```JS
+  import aj from "../lib/arcjet.js"
+  import { isSpoofedBot } from "@arcjet/inspect"
+  export const arcjetProtection = async (req, res, next) => {
+  try {
+  const decision = await aj.protect(req)
+
+    if (decision.isDenied()) {
+      if (decision.reason.isRateLimit()) {
+        return res
+          .status(429)
+          .json({ message: "Rate limit exceeded. Please try again later." })
+      } else if (decision.reason.isBot()) {
+        return res.status(403).json({ message: "Bot access denied." })
+      } else {
+        return res.status(403).json({
+          message: "Access denied by security policy.",
+        })
+      }
+    }
+
+    // check for spoofed bots
+    if (decision.results.some(isSpoofedBot)) {
+      return res.status(403).json({
+        error: "Spoofed bot detected",
+        message: "Malicious bot activity detected.",
+      })
+    }
+
+    next()
+
+  } catch (error) {
+  console.log("Arcjet Protection Error:", error)
+  next()
+  }
+  }
+  ```
+
+- now use the middleware in your routes such as `router.use(arcjetProtection)` or `app.use('/routePath', arcjetProtection)`
