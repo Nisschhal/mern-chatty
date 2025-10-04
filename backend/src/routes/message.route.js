@@ -1,17 +1,24 @@
 import express from "express"
+import {
+  getAllContactsController,
+  getChatPartnerController,
+  getMessagesController,
+  sendMessageController,
+} from "../controllers/message.controller.js"
+import { protectRoute } from "../middleware/auth.middleware.js"
 
 const router = express.Router()
 
-// Define your message routes here
-router.get("/get", (req, res) => {
-  console.log("Get messages route")
-  // Handle fetching messages
-  res.send("Get messages route")
-})
+// Get all contacts
+router.get("/contacts", protectRoute, getAllContactsController)
 
-router.get("/send", (req, res) => {
-  // Handle sending a new message
-  res.send("Send message route")
-})
+// Get chat partner details
+router.get("/chats", protectRoute, getChatPartnerController)
+
+// Get messages with a specific contact
+router.get("/:id", protectRoute, getMessagesController)
+
+// Send a new message
+router.get("/send", protectRoute, sendMessageController)
 
 export default router
