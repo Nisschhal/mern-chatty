@@ -19,6 +19,6 @@ router.get("/chats", protectRoute, getChatPartnerController)
 router.get("/:id", protectRoute, getMessagesController)
 
 // Send a new message
-router.get("/send", protectRoute, sendMessageController)
+router.post("/send/:id", protectRoute, sendMessageController)
 
 export default router
