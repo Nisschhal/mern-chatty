@@ -12,10 +12,32 @@ Create a format for a chat app using MERN stack
 
 ### Frontend Setup
 
+**_ Go to `cd frontend`_**
+
 1. React with Vite:
+
    - `npm create vite@latest .`
    - `npm install`
    - `npm run dev`
+
+2. Adding TailwindCSS
+
+   - Follow docs on [https://tailwindcss.com/docs/installation/using-vite](https://tailwindcss.com/docs/installation/using-vite)
+   - `npm install tailwindcss @tailwindcss/vite`
+   - add the following to the tailwind.config.js file:
+
+     ```JS
+     import tailwindcss from '@tailwindcss/vite'
+     export default defineConfig({
+     plugins: [
+     ...
+     tailwindcss(),
+     ],
+     })
+     ```
+
+   - add `@import "tailwindcss";` to the index.css file
+   - delete app.css file and other css pre-installed by vite rules
 
 ## Backend Requirements
 
@@ -165,7 +187,7 @@ So what we will do is merge them into one project and deploy it to sevalla.
 
 **_Note: this code is only for production to server both client and server APIs because for development we can spin different servers for frontend and backend_**
 
-## APIs Implementation Details
+## Backend APIs Implementation Details
 
 ### Auth APIs
 
@@ -183,6 +205,8 @@ So what we will do is merge them into one project and deploy it to sevalla.
   - Follow the documentation [https://cloudinary.com/documentation/node_integration](https://cloudinary.com/documentation/node_integration)
 
 ### Message APIs
+
+- `/api/messages/` - Get all messages
 
 ## Rate Limit with Arcjet
 
