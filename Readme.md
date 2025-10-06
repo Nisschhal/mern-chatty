@@ -15,6 +15,7 @@ Create a format for a chat app using MERN stack
 - Axios for HTTP requests
 - Zustand for state management
 - Lucide React for icons
+- React Hot Toast for notifications
 
 ### Frontend Setup
 

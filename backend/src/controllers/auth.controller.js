@@ -7,10 +7,10 @@ import ENV from "../lib/env.js"
 import cloudinary from "../lib/cloudinary.js"
 
 export const signupController = async (req, res) => {
-  const { username, email, password } = req.body
+  const { fullName, email, password } = req.body
   const { CLIENT_URL } = ENV
   try {
-    if (!username || !email || !password) {
+    if (!fullName || !email || !password) {
       return res.status(400).json({ error: "All fields are required" })
     }
 
@@ -33,12 +33,12 @@ export const signupController = async (req, res) => {
     const existingUser = await User.findOne({ email })
 
     if (existingUser) {
-      return res.status(400).json({ error: "User already exists" })
+      return res.status(409).json({ error: "User already exists" })
     }
 
     // Create a new user object
     const newUser = new User({
-      username,
+      fullName,
       email,
       password: hashedPassword,
     })
@@ -62,7 +62,7 @@ export const signupController = async (req, res) => {
 
     // TODO: send verification || welcome email
     try {
-      await sendEmail(email, username, process.env.CLIENT_URL)
+      await sendEmail(email, fullName, process.env.CLIENT_URL)
     } catch (error) {
       console.error("Error sending welcome email:", error)
     }
