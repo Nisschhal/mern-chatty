@@ -9,6 +9,11 @@ Create a format for a chat app using MERN stack
 ## Frontend Requirements
 
 - Vanilla React via vite
+- TailwindCSS for styling
+- Daisy UI for pre-styled classes
+- React Router for routing
+- Axios for HTTP requests
+- Zustand for state management
 
 ### Frontend Setup
 
@@ -38,6 +43,26 @@ Create a format for a chat app using MERN stack
 
    - add `@import "tailwindcss";` to the index.css file
    - delete app.css file and other css pre-installed by vite rules
+
+3. Adding Daisy UI for pre-styled classes
+
+   - Follow docs on [https://daisyui.com/docs/install](https://daisyui.com/docs/install)
+   - `npm i -D daisyui@latest`
+   - add `@plugin "daisyui";` to the index.css file
+     **_ Just apply the class such as `btn` to get the pre-styled class _**
+
+4. Adding React Router for routing
+
+   - Follow [https://reactrouter.com/start/declarative/installation](https://reactrouter.com/start/declarative/installation)
+   - `npm i react-router`
+   - add `<BrowserRouter> to the root of the App component</BrowserRouter>` such as main.jsx
+
+5. Adding Axios for HTTP requests
+
+   - create lib/axios.js file
+
+6. Adding Zustand for state management
+   - create lib/store.js file
 
 ## Backend Requirements
 
