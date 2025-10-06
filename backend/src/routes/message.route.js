@@ -6,7 +6,7 @@ import {
   sendMessageController,
 } from "../controllers/message.controller.js"
 import { protectRoute } from "../middleware/auth.middleware.js"
-import { arcjectProtection } from "../middleware/arcjet.middleware.js"
+import { arcjetProtection } from "../middleware/arcjet.middleware.js"
 
 const router = express.Router()
 
@@ -14,7 +14,7 @@ const router = express.Router()
 // Apply protection middleware to all routes in this router
 // This ensures that only authenticated users can access these routes
 
-router.use(arcjectProtection, protectRoute)
+router.use(arcjetProtection, protectRoute)
 
 // Get all contacts
 router.get("/contacts", getAllContactsController)

@@ -1,15 +1,21 @@
-import { useState } from "react"
-import { Route, Routes } from "react-router"
+import { useEffect, useState } from "react"
+import { Navigate, Route, Routes } from "react-router"
 import ChatPage from "./pages/chat"
 import LoginPage from "./pages/login"
 import SignupPage from "./pages/signup"
 import { useAuthStore } from "./store/useAuthStore"
+import PageLoader from "./components/PageLoader"
 
 function App() {
   const [count, setCount] = useState(0)
-  const { authUser, isLoading, isLoggedIn, login, logout } = useAuthStore()
+  const { authUser, isCheckingAuth, checkAuth } = useAuthStore()
   console.log("authUser from store", authUser)
-  console.log("isLoggedIn from store", isLoggedIn)
+
+  useEffect(() => {
+    checkAuth()
+  }, [checkAuth])
+
+  if (true) return <PageLoader />
 
   return (
     <div className="bg-slate-900 z-0 min-h-screen relative flex items-center jusify-center p-4 overflow-hidden">
@@ -19,11 +25,20 @@ function App() {
       <div className="absolute  -z-10 animate-[pulse_4s_infinite] bottom-0 -right-4 size-96 bg-cyan-500 opacity-20 blur-[150px]" />{" "}
       {/* Routes------ */}
       <Routes>
-        <Route path="/" element={<ChatPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
+        <Route
+          path="/"
+          element={authUser ? <ChatPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/login"
+          element={!authUser ? <LoginPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/signup"
+          element={!authUser ? <SignupPage /> : <Navigate to="/" />}
+        />
       </Routes>
-      <button className="btn z-0" onClick={login}>
+      <button className="btn z-0" onClick={checkAuth}>
         Clik me!
       </button>
     </div>

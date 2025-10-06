@@ -14,6 +14,7 @@ Create a format for a chat app using MERN stack
 - React Router for routing
 - Axios for HTTP requests
 - Zustand for state management
+- Lucide React for icons
 
 ### Frontend Setup
 
@@ -63,6 +64,7 @@ Create a format for a chat app using MERN stack
 
 6. Adding Zustand for state management
    - create lib/store.js file
+     - create useAuthStore.js file for authentication, make sure to use cors at the backend
 
 ## Backend Requirements
 
@@ -77,6 +79,7 @@ Create a format for a chat app using MERN stack
 - nodemailer for sending emails
 - cloudinary for image uploading
 - arcjet for rate limiting
+- cors for cross-origin resource sharing
 
 ### Backend Setup
 

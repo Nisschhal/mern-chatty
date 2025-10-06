@@ -2,10 +2,12 @@ import express from "express"
 import dotenv from "dotenv"
 import path from "path"
 import cookieParser from "cookie-parser"
+import cors from "cors"
 
 import authRoutes from "./routes/auth.route.js"
 import messageRoutes from "./routes/message.route.js"
 import { connectDB } from "./lib/db.js"
+import ENV from "./lib/env.js"
 
 dotenv.config()
 
@@ -16,6 +18,13 @@ const app = express()
 app.use(express.json())
 // Parse Cookie for JWT token
 app.use(cookieParser())
+// Enable CORS for cross-origin requests
+app.use(
+  cors({
+    origin: ENV.CLIENT_URL, // frontend url
+    credentials: true, // allow cookies to be sent
+  })
+)
 
 const PORT = process.env.PORT || 3000
 console.log("PORT:", PORT)
