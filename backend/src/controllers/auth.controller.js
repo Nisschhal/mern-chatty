@@ -113,8 +113,10 @@ export const logoutController = (_, res) => {
 
 // Profile Update
 export const updateProfileController = async (req, res) => {
+  console.log("Profile update request body:", req.body)
   try {
     const { profilePic } = req.body
+    console.log("ProfilePic received:", profilePic)
     if (!profilePic) {
       return res.status(400).json({ error: "Profile picture is required" })
     }

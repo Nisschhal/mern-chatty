@@ -16,29 +16,33 @@ export const getAllContactsController = async (req, res) => {
   }
 }
 
-export const getChatPartnerController = (req, res) => {
+export const getChatPartnersController = async (req, res) => {
   try {
     const loggedInUserId = req.user._id
-    console.log("Getting chat partners for user ID:", loggedInUserId)
-    const messages = Message.find({
+
+    // find all the messages where the logged-in user is either sender or receiver
+    const messages = await Message.find({
       $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
     })
-    console.log("Messages involving user:", messages)
 
-    const chatPartnerIds = new Set([
-      ...messages.map((msg) =>
-        msg.senderId.toString() === loggedInUserId.toString()
-          ? msg.receiverId.toString()
-          : msg.senderId.toString()
+    const chatPartnerIds = [
+      ...new Set(
+        messages.map((msg) =>
+          msg.senderId.toString() === loggedInUserId.toString()
+            ? msg.receiverId.toString()
+            : msg.senderId.toString()
+        )
       ),
-    ])
+    ]
 
-    console.log("Chat partner IDs:", Array.from(chatPartnerIds))
-    // Logic to fetch chat partner details
-    res.status(200).json({ message: "Fetched chat partner details" })
+    const chatPartners = await User.find({
+      _id: { $in: chatPartnerIds },
+    }).select("-password")
+
+    res.status(200).json(chatPartners)
   } catch (error) {
-    console.error("Error fetching chat partner details:", error)
-    res.status(500).json({ message: "Server error" })
+    console.error("Error in getChatPartners: ", error.message)
+    res.status(500).json({ error: "Internal server error" })
   }
 }
 

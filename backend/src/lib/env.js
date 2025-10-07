@@ -7,8 +7,8 @@ export const ENV = {
   NODE_ENV: process.env.NODE_ENV || "development",
   CLIENT_URL:
     process.env.NODE_ENV === "production"
-      ? process.env.CLIENT_URL
-      : "http://localhost:3000",
+      ? process.env.CLIENT_URL // e.g., your deployed frontend URL
+      : "http://localhost:5173", // FIXED: Frontend Vite port, not backend!
 
   SENDER_EMAIL: process.env.SENDER_EMAIL,
   SENDER_PASSWORD: process.env.SENDER_PASSWORD,

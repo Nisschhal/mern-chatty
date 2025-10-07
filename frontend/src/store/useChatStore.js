@@ -1,45 +1,52 @@
 import { create } from "zustand"
 import { toast } from "react-hot-toast"
+import { axiosInstance } from "../lib/axios"
 export const useChatStore = create((set, get) => ({
   allContacts: [],
   chats: [],
   messages: [],
   activeTab: "chats",
   selectedUser: null,
-  isUserLoading: false,
+  isUsersLoading: false,
   isMessagesLoading: false,
-  isSoundEnabled: localStorage.getItem("isSoundEnabled") === "true",
+  isSoundEnabled: JSON.parse(localStorage.getItem("isSoundEnabled")) === "true",
 
   // Functionns to update the state
   toggleSound: () => {
     const currentSound = get().isSoundEnabled
-    localStorage.setItem("isSoundEnabled", !currentSound)
+    JSON.stringify(localStorage.setItem("isSoundEnabled", !currentSound))
     set({ isSoundEnabled: !currentSound })
   },
   setActiveTab: (tab) => set({ activeTab: tab }),
   setSelectedUser: (user) => set({ selectedUser: user }),
 
   getAllContacts: async () => {
-    set({ isUserLoading: true })
+    set({ isUsersLoading: true })
     try {
-      const res = await axiosInstance.get("/messages/contacts")
+      const res = await axiosInstance.get("/message/contacts")
+      console.log("Contacts fetched:", res.data)
       set({ allContacts: res.data })
     } catch (error) {
       console.log("Error fetching contacts:", error)
       toast.error("Error fetching contacts", error.response?.data?.error)
     } finally {
-      set({ isUserLoading: false })
+      set({ isUsersLoading: false })
     }
   },
   getMyChatPartners: async () => {
-    set({ isUserLoading: true })
+    set({ isUsersLoading: true })
     try {
-      const res = await axiosInstance.get("/messages/chats")
-      set({ chats: res.data })
+      const res = await axiosInstance.get("/message/chats")
+      console.log("Full API response:", res.data) // ADD: Debug what backend sends
+      // FIX: Extract array safely (adjust 'data' or 'chats' to match your backend)
+      const chatArray = res.data.chats || res.data.data || res.data || [] // Fallback to empty array
+      set({ chats: chatArray })
     } catch (error) {
       console.log("Error fetching chat partners:", error)
+      toast.error("Failed to load chats") // Optional: User feedback
+      set({ chats: [] }) // ADD: Reset to empty on error
     } finally {
-      set({ isUserLoading: false })
+      set({ isUsersLoading: false })
     }
   },
 }))

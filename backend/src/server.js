@@ -15,17 +15,18 @@ const app = express()
 
 // Middlewares
 // Parse JSON bodies  (as sent by API clients)
-app.use(express.json())
-// Parse Cookie for JWT token
+app.use(express.json({ limit: "10mb" })) // NEW: Bump from default 1mb// Parse Cookie for JWT token
 app.use(cookieParser())
 // Enable CORS for cross-origin requests
 app.use(
   cors({
-    origin: ENV.CLIENT_URL, // frontend url
-    credentials: true, // allow cookies to be sent
+    origin:
+      process.env.NODE_ENV === "production"
+        ? ["http://localhost:5173", "http://localhost:3000"] // Allow both
+        : ENV.CLIENT_URL,
+    credentials: true,
   })
 )
-
 const PORT = process.env.PORT || 3000
 console.log("PORT:", PORT)
 

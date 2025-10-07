@@ -1,7 +1,7 @@
 import express from "express"
 import {
   getAllContactsController,
-  getChatPartnerController,
+  getChatPartnersController,
   getMessagesController,
   sendMessageController,
 } from "../controllers/message.controller.js"
@@ -20,7 +20,7 @@ router.use(arcjetProtection, protectRoute)
 router.get("/contacts", getAllContactsController)
 
 // Get chat partner details
-router.get("/chats", getChatPartnerController)
+router.get("/chats", getChatPartnersController)
 
 // Get messages with a specific contact
 router.get("/:id", getMessagesController)
