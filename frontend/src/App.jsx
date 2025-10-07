@@ -17,7 +17,7 @@ function App() {
   if (isCheckingAuth) return <PageLoader />
 
   return (
-    <div className="bg-slate-900 z-0 min-h-screen relative flex items-center jusify-center p-4 overflow-hidden">
+    <div className="bg-slate-900 z-0 min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
       {/* DECORATORS -- GRID BG & GLOW SHAPES */}
       {/* BACKGROUND */}
       <div className="-z-10">
