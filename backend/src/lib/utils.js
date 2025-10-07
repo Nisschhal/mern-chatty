@@ -3,7 +3,7 @@ import ENV from "./env.js"
 
 export const generateToken = async (userId, res) => {
   try {
-    const { JWT_SECRET, NODE_ENV } = ENV
+    const { JWT_SECRET } = ENV
 
     if (!JWT_SECRET) {
       throw new Error("JWT_SECRET is not defined in environment variables")
