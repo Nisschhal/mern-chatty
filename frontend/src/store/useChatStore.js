@@ -1,6 +1,7 @@
 import { create } from "zustand"
 import { toast } from "react-hot-toast"
 import { axiosInstance } from "../lib/axios"
+import { useAuthStore } from "./useAuthStore"
 export const useChatStore = create((set, get) => ({
   allContacts: [],
   chats: [],
@@ -63,6 +64,41 @@ export const useChatStore = create((set, get) => ({
       set({ isMessagesLoading: false })
     }
   },
+
+  sendMessage: async (messageData) => {
+    const { selectedUser, messages } = get()
+    const { authUser } = useAuthStore.getState()
+
+    const optimisticMessage = {
+      _id: `temp-id-${Date.now()}`, // Temporary ID for optimistic UI
+      senderId: authUser._id, // Placeholder, replace with actual auth user ID if available
+      receiverId: selectedUser._id,
+      text: messageData.text || "",
+      image: messageData.image || null,
+      createdAt: new Date().toISOString(),
+      // Add other necessary fields if any
+      isOptimistic: true, // Flag to identify optimistic messages
+    }
+
+    // Optimistically update the UI
+    set({ messages: [...messages, optimisticMessage] })
+
+    try {
+      const res = await axiosInstance.post(
+        `/message/send/${selectedUser._id}`,
+        messageData
+      )
+      console.log("Message sent------ response:", res)
+      // Optimistically update messages
+      // set((state) => ({ messages: [...state.messages, res.data] }))
+    } catch (error) {
+      console.log("Error sending message:", error)
+      // Revert optimistic update on failure
+      set({ messages })
+      toast.error(error.response?.data?.error || "Failed to send message") // Optional: User feedback
+    }
+  },
+
   subscribeToMessages: () => {},
   unsubscribeFromMessages: () => {},
 }))

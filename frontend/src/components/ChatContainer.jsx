@@ -31,6 +31,7 @@ function ChatContainer() {
     unsubscribeFromMessages,
   ])
 
+  // when ever messages change, scroll to bottom
   useEffect(() => {
     if (messageEndRef.current) {
       messageEndRef.current.scrollIntoView({ behavior: "smooth" })
