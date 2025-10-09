@@ -2,6 +2,7 @@ import { useState, useRef } from "react"
 import { LogOutIcon, VolumeOffIcon, Volume2Icon } from "lucide-react"
 import { useAuthStore } from "../store/useAuthStore"
 import { useChatStore } from "../store/useChatStore"
+import { useEffect } from "react"
 
 const mouseClickSound = new Audio("/sounds/mouse-click.mp3")
 
@@ -11,6 +12,8 @@ function ProfileHeader() {
   const [selectedImg, setSelectedImg] = useState(null)
 
   const fileInputRef = useRef(null)
+
+  useEffect(() => {}, [authUser])
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0]

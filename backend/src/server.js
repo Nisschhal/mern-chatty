@@ -8,11 +8,11 @@ import authRoutes from "./routes/auth.route.js"
 import messageRoutes from "./routes/message.route.js"
 import { connectDB } from "./lib/db.js"
 import ENV from "./lib/env.js"
+import { app, server } from "./lib/socket.js"
 
 dotenv.config()
 
-const app = express()
-
+// use the express app from socket.js
 // Middlewares
 // Parse JSON bodies  (as sent by API clients)
 app.use(express.json({ limit: "10mb" })) // NEW: Bump from default 1mb// Parse Cookie for JWT token
@@ -21,7 +21,7 @@ app.use(cookieParser())
 app.use(
   cors({
     origin:
-      process.env.NODE_ENV === "production"
+      process.env.NODE_ENV === "development"
         ? ["http://localhost:5173", "http://localhost:3000"] // Allow both
         : ENV.CLIENT_URL,
     credentials: true,
@@ -48,8 +48,8 @@ app.use("/api/message", messageRoutes)
 const __dirname = path.resolve()
 const frontendDistPath = path.join(__dirname, "..", "frontend", "dist")
 
-console.log("Frontend Dist Path:", frontendDistPath)
-console.log(process.env.NODE_ENV)
+// console.log("Frontend Dist Path:", frontendDistPath)
+// console.log(process.env.NODE_ENV)
 
 // make ready for deployment
 if (process.env.NODE_ENV === "production") {
@@ -60,7 +60,8 @@ if (process.env.NODE_ENV === "production") {
   })
 }
 
-app.listen(PORT, () => {
+// Start the socket server
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
   connectDB()
 })

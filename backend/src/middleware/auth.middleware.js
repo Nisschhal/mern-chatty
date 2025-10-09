@@ -5,17 +5,17 @@ import User from "../models/user.model.js"
 export const protectRoute = async (req, res, next) => {
   try {
     const token = req.cookies.jwt
-    console.log("JWT Token from Cookie:", token)
+    // console.log("JWT Token from Cookie:", token)
     if (!token)
       return res
         .status(401)
         .json({ message: "Unauthorized - No token provided" })
 
     const decoded = jwt.verify(token, ENV.JWT_SECRET)
-    console.log("JWT Decoded:", decoded)
+    // console.log("JWT Decoded:", decoded)
     if (!decoded)
       return res.status(401).json({ message: "Unauthorized - Invalid token" })
-    console.log("Decoded JWT:", decoded)
+    // console.log("Decoded JWT:", decoded)
 
     // Fetch the user from the database
 

@@ -81,6 +81,7 @@ Create a format for a chat app using MERN stack
 - cloudinary for image uploading
 - arcjet for rate limiting
 - cors for cross-origin resource sharing
+- Socket.io for real-time communication
 
 ### Backend Setup
 
@@ -329,3 +330,11 @@ So what we will do is merge them into one project and deploy it to sevalla.
   ```
 
 - now use the middleware in your routes such as `router.use(arcjetProtection)` or `app.use('/routePath', arcjetProtection)`
+
+## Socket.io for real-time communication/chat
+
+### Socket.io Implementation
+
+- Follow the documentation/instruction [https://socket.io/docs/v4/server-installation/](https://socket.io/docs/v4/server-installation/)
+- Install Socket.io: `npm i socket.io` in the backend folder
+-
